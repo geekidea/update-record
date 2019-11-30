@@ -1,0 +1,5 @@
+# Auto Configure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+io.geekidea.updaterecord.mybatis.spring.boot.autoconfigure.UpdateRecordAutoConfiguration,\
+io.geekidea.updaterecord.persistence.service.impl.UpdateRecordServiceImpl,\
+io.geekidea.updaterecord.core.factory.UpdateRecordServiceFactory
