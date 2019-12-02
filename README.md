@@ -5,6 +5,9 @@
 ## Website
 [update-record](http://geekidea.io/update-record/)
 
+## Video
+<iframe src="//player.bilibili.com/player.html?aid=67401204&cid=116864676&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+
 ## Quick Start
 
 ### 1. Create a log table for update record
@@ -12,6 +15,7 @@
 
 ### 2. update-record dependency into the project
 - 目前最新版是 1.0-SNAPSHOT 快照版本
+
 ```xml
 <dependency>
     <groupId>io.geekidea.spring.boot</groupId>
