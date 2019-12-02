@@ -6,7 +6,7 @@
 [update-record](http://geekidea.io/update-record/)
 
 ## Video
-<iframe src="//player.bilibili.com/player.html?aid=67401204&cid=116864676&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+[![update-record video](http://geekidea.io/update-record/geekidea-update-record.png)](//player.bilibili.com/player.html?aid=67401204&cid=116864676&page=1)
 
 ## Quick Start
 
@@ -48,7 +48,7 @@ public class UpdateRecordAop extends UpdateRecordAopSupport {
     /**
      * 切点
      */
-    private static final String POINTCUT = "execution(public * io.geekidea.updaterecord..controller..*.*(..))";
+    private static final String POINTCUT = "@annotation(io.geekidea.updaterecord.annotation.UpdateRecord)";
 
     /**
      * 方法执行之前
