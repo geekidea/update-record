@@ -36,11 +36,44 @@
 
     <name>${project.artifactId}</name>
     <url>https://github.com/geekidea/update-record</url>
+    <description></description>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>geekidea</id>
+            <name>update-record</name>
+            <url>https://github.com/geekidea</url>
+        </developer>
+    </developers>
+
+    <organization>
+        <name>geekidea</name>
+        <url>https://github.com/geekidea</url>
+    </organization>
+
+    <issueManagement>
+        <system>github</system>
+        <url>https://github.com/geekidea/update-record/issues</url>
+    </issueManagement>
+
+    <scm>
+        <url>https://github.com/geekidea/update-record</url>
+        <connection>scm:git@github.com:geekidea/update-record.git</connection>
+        <developerConnection>scm:git@github.com:geekidea/update-record.git</developerConnection>
+    </scm>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <utf8>UTF-8</utf8>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>${utf8}</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>${utf8}</project.reporting.outputEncoding>
         <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
         <mybatis-spring-boot.version>2.1.1</mybatis-spring-boot.version>
         <mysql.version>8.0.18</mysql.version>
@@ -48,6 +81,16 @@
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-lang3.version>3.9</commons-lang3.version>
         <guava.version>28.1-jre</guava.version>
+
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+        <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
+        <maven-javadoc-plugin.version>3.0.0</maven-javadoc-plugin.version>
+        <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <nexus-staging-maven-plugin.version>1.6.7</nexus-staging-maven-plugin.version>
+        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -121,22 +164,122 @@
         </dependency>
     </dependencies>
 
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <defaultGoal>compile</defaultGoal>
+                <pluginManagement>
+                    <plugins>
+                        <!-- Javadoc -->
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-javadoc-plugin</artifactId>
+                            <version>${maven-javadoc-plugin.version}</version>
+                            <configuration>
+                                <charset>${utf8}</charset>
+                                <failOnError>false</failOnError>
+                                <additionalOptions>
+                                    <additionalOption>-Xdoclint:none</additionalOption>
+                                </additionalOptions>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <id>attach-javadocs</id>
+                                    <goals>
+                                        <goal>jar</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                        <!-- GPG -->
+                        <plugin>
+                            <groupId>org.sonatype.plugins</groupId>
+                            <artifactId>nexus-staging-maven-plugin</artifactId>
+                            <version>${nexus-staging-maven-plugin.version}</version>
+                            <extensions>true</extensions>
+                            <configuration>
+                                <serverId>oss-geekidea</serverId>
+                                <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                                <autoReleaseAfterClose>false</autoReleaseAfterClose>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-gpg-plugin</artifactId>
+                            <version>${maven-gpg-plugin.version}</version>
+                            <executions>
+                                <execution>
+                                    <id>sign-artifacts</id>
+                                    <phase>verify</phase>
+                                    <goals>
+                                        <goal>sign</goal>
+                                    </goals>
+                                    <configuration>
+                                        <keyname>FC6DE2D2F305E14DD06899F50642E980326711F5</keyname>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-release-plugin</artifactId>
+                            <version>${maven-release-plugin.version}</version>
+                            <configuration>
+                                <autoVersionSubmodules>true</autoVersionSubmodules>
+                                <useReleaseProfile>false</useReleaseProfile>
+                                <releaseProfiles>release</releaseProfiles>
+                                <goals>deploy</goals>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>oss-geekidea</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                    <id>oss-geekidea</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
+
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.2.0</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
+        <defaultGoal>compile</defaultGoal>
+        <pluginManagement>
+            <plugins>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                    <configuration>
+                        <source>${maven.compiler.source}</source>
+                        <target>${maven.compiler.target}</target>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven-source-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
 </project>
