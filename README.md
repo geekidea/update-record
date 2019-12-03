@@ -6,7 +6,7 @@
 [update-record](http://geekidea.io/update-record/)
 
 ## Video
-[![update-record video](http://geekidea.io/update-record/geekidea-update-record.png)](//player.bilibili.com/player.html?aid=67401204&cid=116864676&page=1)
+[![update-record video](http://geekidea.io/update-record/geekidea-update-record.png)](https://www.bilibili.com/video/av77871598)
 
 ## Quick Start
 
