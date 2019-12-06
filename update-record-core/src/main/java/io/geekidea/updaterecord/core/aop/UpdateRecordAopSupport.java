@@ -77,7 +77,6 @@ public class UpdateRecordAopSupport {
      */
     protected static final String TOKEN = "token";
 
-    @Autowired
     protected UpdateRecordService updateRecordService;
 
     /**
