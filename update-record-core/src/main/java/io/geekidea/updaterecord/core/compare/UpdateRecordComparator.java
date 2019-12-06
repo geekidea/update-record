@@ -171,10 +171,7 @@ public class UpdateRecordComparator {
             // 添加到集合中
             diffSet.add(fieldCompareVo);
 
-            updateRecordColumnLog.setMode(mode)
-                    .setCommitId(UpdateRecordThreadLocalCache.getCommitId())
-                    .setBeforeVersion(beforeVersionValue)
-                    .setAfterVersion(afterVersionValue);
+            updateRecordColumnLog.setMode(mode).setCommitId(UpdateRecordThreadLocalCache.getCommitId());
 
             updateRecordColumnLogs.add(updateRecordColumnLog);
         }
