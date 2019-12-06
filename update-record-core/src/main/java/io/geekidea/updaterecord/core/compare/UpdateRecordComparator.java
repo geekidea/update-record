@@ -24,6 +24,7 @@ import io.geekidea.updaterecord.core.config.UpdateRecordConfigProperties;
 import io.geekidea.updaterecord.core.constant.UpdateRecordConstant;
 import io.geekidea.updaterecord.core.enums.ModeEnum;
 import io.geekidea.updaterecord.core.util.Jackson;
+import io.geekidea.updaterecord.core.util.UpdateRecordUtil;
 import io.geekidea.updaterecord.core.vo.FieldCompareVo;
 import io.geekidea.updaterecord.core.vo.UpdateRecordItemVo;
 import lombok.extern.slf4j.Slf4j;
@@ -66,7 +67,7 @@ public class UpdateRecordComparator {
         // 修改列集合
         Set<UpdateRecordColumnLog> updateRecordColumnLogs = new LinkedHashSet<>();
         // 修改描述字符串
-        StringBuilder builder = new StringBuilder();
+        List<String> updateDescList = new ArrayList<>();
         // 获取对象的所有可访问字段
         Set<String> columnNames = beforeMap.keySet();
 
@@ -143,22 +144,18 @@ public class UpdateRecordComparator {
                 // add
                 modeEnum = ModeEnum.ADD;
                 addCount++;
-                builder.append(String.format(UpdateRecordConfigProperties.ADD_MODEL_FORMAT, columnDesc, afterValueString));
+                updateDescList.add(String.format(UpdateRecordConfigProperties.ADD_MODEL_FORMAT, columnDesc, afterValueString));
             } else if (afterValue == null || "".equals(afterValue.toString().trim())) {
                 // delete
                 modeEnum = ModeEnum.DELETE;
                 deleteCount++;
-                builder.append(String.format(UpdateRecordConfigProperties.DELETE_MODEL_FORMAT, columnDesc));
+                updateDescList.add(String.format(UpdateRecordConfigProperties.DELETE_MODEL_FORMAT, columnDesc));
             } else {
                 // 两个字段有值，且不相等，则为修改
                 // update
                 modeEnum = ModeEnum.UPDATE;
                 updateCount++;
-                builder.append(String.format(UpdateRecordConfigProperties.UPDATE_MODEL_FORMAT, columnDesc, beforeValueString, afterValueString));
-            }
-
-            if (i < size) {
-                builder.append(columnSeparator);
+                updateDescList.add(String.format(UpdateRecordConfigProperties.UPDATE_MODEL_FORMAT, columnDesc, beforeValueString, afterValueString));
             }
 
             // 字段比较对象
@@ -188,11 +185,7 @@ public class UpdateRecordComparator {
 
 
         // 去掉最后一个分隔符
-        String updateDesc = builder.toString();
-        if (StringUtils.isNotBlank(updateDesc)){
-            int lastIndex = updateDesc.lastIndexOf(columnSeparator);
-            updateDesc = updateDesc.substring(0,lastIndex);
-        }
+        String updateDesc = UpdateRecordUtil.join(updateDescList,columnSeparator);
 
         // 4. 得出修改部分内容
         total = addCount + updateCount + deleteCount;

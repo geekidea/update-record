@@ -28,6 +28,7 @@ import io.geekidea.updaterecord.core.constant.UpdateRecordConstant;
 import io.geekidea.updaterecord.core.factory.UpdateRecordServiceFactory;
 import io.geekidea.updaterecord.core.util.IpUtil;
 import io.geekidea.updaterecord.core.util.Jackson;
+import io.geekidea.updaterecord.core.util.UpdateRecordUtil;
 import io.geekidea.updaterecord.core.util.UuidUtil;
 import io.geekidea.updaterecord.core.vo.FieldCompareVo;
 import io.geekidea.updaterecord.core.vo.UpdateRecordItemVo;
@@ -255,7 +256,8 @@ public class UpdateRecordAopSupport {
             List<UpdateRecordTableLog> updateRecordTableLogs = new ArrayList<>();
             // 所有修改列的集合
             Set<UpdateRecordColumnLog> updateRecordColumnLogs = new LinkedHashSet<>();
-            StringBuilder builder = new StringBuilder();
+            // 表修改记录描述集合
+            List<String> updateAllDescList = new ArrayList<>();
             // 修改数量统计
             // 修改表总数
             int tableTotal = 0;
@@ -311,7 +313,7 @@ public class UpdateRecordAopSupport {
 
                 String updateDesc = updateRecordTableLog.getUpdateDesc();
                 if (StringUtils.isNotBlank(updateDesc)) {
-                    builder.append(updateDesc + tableSeparator);
+                    updateAllDescList.add(updateDesc);
                 }
 
                 tableTotal++;
@@ -340,11 +342,7 @@ public class UpdateRecordAopSupport {
             }
 
             // 去掉最后一个分隔符
-            String updateAllDesc = builder.toString();
-            if (StringUtils.isNotBlank(updateAllDesc)){
-                int lastIndex = updateAllDesc.lastIndexOf(tableSeparator);
-                updateAllDesc = updateAllDesc.substring(0,lastIndex);
-            }
+            String updateAllDesc = UpdateRecordUtil.join(updateAllDescList,tableSeparator);
 
             // 设置修改记录
             updateRecordLog
@@ -421,9 +419,9 @@ public class UpdateRecordAopSupport {
      */
     protected void save(UpdateRecordLog updateRecordLog, List<UpdateRecordTableLog> updateRecordTableLogs, Set<UpdateRecordColumnLog> updateRecordColumnLogs) {
         boolean format = UpdateRecordConfigProperties.DEBUG;
-        log.info("updateRecordLog：{}", Jackson.toJsonString(updateRecordLog, true));
-        log.info("updateRecordTableLogs：{}", Jackson.toJsonString(updateRecordTableLogs, true));
-        log.info("updateRecordColumnLogs：{}", Jackson.toJsonString(updateRecordColumnLogs, true));
+        log.info("updateRecordLog：{}", Jackson.toJsonString(updateRecordLog, format));
+        log.info("updateRecordTableLogs：{}", Jackson.toJsonString(updateRecordTableLogs, format));
+        log.info("updateRecordColumnLogs：{}", Jackson.toJsonString(updateRecordColumnLogs, format));
         updateRecordService.save(updateRecordLog, updateRecordTableLogs, updateRecordColumnLogs);
     }
 
