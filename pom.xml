@@ -80,7 +80,7 @@
         <lombok.version>1.18.10</lombok.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-lang3.version>3.9</commons-lang3.version>
-        <guava.version>28.1-jre</guava.version>
+        <guava.version>29.0-jre</guava.version>
 
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
